@@ -1,5 +1,5 @@
 #! /usr/bin/Python
-import praw
+import praw, os
 from util import success, warn, log, fail, special, bluelog
 
 ### Uncomment to debug
@@ -17,6 +17,10 @@ def YouTuberBot():
 
 ### Opens a config file that contains configuration settings.
 def OpenConfigFile():
+	### Set root directory to script directory
+	abspath = os.path.abspath(__file__)
+	dname = os.path.dirname(abspath)
+	os.chdir(dname)
 	with open ('datafile.inf', 'r') as myfile:
 		datafile_lines=myfile.readlines()
 		return datafile_lines
@@ -54,13 +58,13 @@ def SearchSubredditForKeywords(subredditName, keyWords):
 	for submission in subreddit.get_hot(limit=10):
 		op_text = submission.selftext.encode('ascii', 'ignore').lower()
 		success(op_text)
-        has_keyWords = any(string in op_text for string in keyWords)
-        # Test if it contains a PRAW-related question
-        if submission.id not in already_done and has_keyWords:
-            msg = '[Keyword found](%s)' % submission.short_link
-            success(msg)
-            already_done.append(submission.id)
-    
+		has_keyWords = any(string in op_text for string in keyWords)
+		# Test if it contains a PRAW-related question
+		if submission.id not in already_done and has_keyWords:
+			msg = '[Keyword found](%s)' % submission.short_link
+			success(msg)
+			already_done.append(submission.id)
+	
 
 
 if __name__ == "__main__":
