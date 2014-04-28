@@ -11,7 +11,7 @@ def YouTuberBot():
 	OpenConfigFile()
 	global r 
 	r = LoginToReddit()
-	SearchSubredditForKeywords("test", ['test', 'hello'])
+	SearchSubredditTitlesForKeywords("test", ['test', 'hello'])
 
 
 
@@ -49,22 +49,48 @@ def LoginToReddit():
 
 
 
-def SearchSubredditForKeywords(subredditName, keyWords):
+def SearchSubredditTitlesForKeywords(subredditName, keyWords):
 
 	already_done = []
 
 	#Starting with a single subreddit.  This may later be changed to look at all comments 
 	subreddit = r.get_subreddit(subredditName)
 	for submission in subreddit.get_hot(limit=10):
-		op_text = submission.selftext.encode('ascii', 'ignore').lower()
-		success(op_text)
+		op_text = submission.selftext.encode('ascii', 'ignore').lower()		
 		has_keyWords = any(string in op_text for string in keyWords)
 		# Test if it contains a PRAW-related question
 		if submission.id not in already_done and has_keyWords:
 			msg = '[Keyword found](%s)' % submission.short_link
 			success(msg)
 			already_done.append(submission.id)
-	
+
+
+
+def SearchSubredditCommentsForKeywords(subredditName, keyWords):
+	### To be implemented
+	return
+
+
+### Posts a reply to a comment
+### Input - commentId of comment to reply to, message to reply with
+def ReplyToComment(commentId, msg):
+	### To be implemented
+	return
+
+### Retrieves video information.
+### Input - youtube link 
+### Output - Metadata for video
+def GetVideoInformation(link):
+	### To be implemented
+	return
+
+
+### Determines if a comment has already been processed.
+### Input - reddit commentId
+### Output - bool indicating processed status.
+def IsCommentAlreadyProcessed(commentId):
+	### To be implemented
+	return
 
 
 if __name__ == "__main__":
