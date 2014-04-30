@@ -104,6 +104,29 @@ def IsYouTubeLink(link):
 	pattern = '^(http\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$'
 	return bool(re.match(pattern, link))
 
+###region List Functions###
+
+### Load a list from file
+def LoadListFromFile(FileName):
+	L= []
+	L = pickle.load(open(FileName, "rb"))
+	return L
+
+### Save a list to file
+def SaveListToFile(L, FileName):
+	pickle.dump(L, open(FileName, "wb"))
+
+### Determines if value is in list
+def IsInList(L, x, lo=0, hi=None):
+	hi = hi if hi is not None else len(L) # hi defaults to len(a)   
+	pos = bisect_left(L,x,lo,hi)          # find insertion position
+	return (pos if pos != hi and L[pos] == x else -1) # don't walk off the end
+
+### Insert to list
+def InsertToList(L, x):
+	bisect.insort(L, x)
+
+###endregion List Functions###
 
 
 if __name__ == "__main__":
