@@ -1,5 +1,8 @@
 #! /usr/bin/Python
 import praw, os, time, re
+import pprint
+import bisect
+import pickle
 from util import success, warn, log, fail, special, bluelog
 
 ### Uncomment to debug
@@ -8,11 +11,27 @@ logging.basicConfig(level=logging.DEBUG)
 
 ### Main program execution path
 def YouTuberBot():
+
+	# Define globals
+	global r
+	global processedComments
+
+	# Load Configurations
 	OpenConfigFile()
-	global r 
+
+	# Load previously processed comments List
+	processedComments = LoadListFromFile("ProcessedComments.inf")
+
+	# Connect to reddit
 	r = LoginToReddit()
+
+	# Work horse section
+
 	#SearchSubredditTitlesForKeywords("test", ['test', 'hello'])
 	SearchSubmisson('242i2k', ['hello'])
+
+	# Save newly processed comments
+	SaveListToFile(processedComments, "ProcessedComments.inf")
 
 
 
@@ -68,14 +87,12 @@ def SearchSubredditTitlesForKeywords(subredditName, keyWords):
 
 
 def SearchSubmisson(submissionId, keyWords):
-	already_done = set()
 	submission = r.get_submission(submission_id=submissionId)
 	flat_comments = praw.helpers.flatten_tree(submission.comments)
 	for comment in flat_comments:
-		if comment.body.lower() == "hello" and comment.id not in already_done:
-			comment.reply('Goodbye')
-			already_done.add(comment.id)
-			time.sleep(2)
+		if comment.body.lower() == "hello" and comment.id not in processedComments:
+			#comment.reply('Goodbye')
+			InsertToList(processedComments, comment.id)
 
 
 ### Posts a reply to a comment
