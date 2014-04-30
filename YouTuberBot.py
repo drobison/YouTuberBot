@@ -1,5 +1,5 @@
 #! /usr/bin/Python
-import praw, os, time
+import praw, os, time, re
 from util import success, warn, log, fail, special, bluelog
 
 ### Uncomment to debug
@@ -98,6 +98,12 @@ def GetVideoInformation(link):
 def IsCommentAlreadyProcessed(commentId):
 	### To be implemented
 	return
+
+
+def IsYouTubeLink(link):
+	pattern = '^(http\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$'
+	return bool(re.match(pattern, link))
+
 
 
 if __name__ == "__main__":
