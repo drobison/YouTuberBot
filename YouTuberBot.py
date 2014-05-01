@@ -26,12 +26,12 @@ def YouTuberBot():
 	r = LoginToReddit()
 
 	# Work horse section
-
-	#SearchSubredditTitlesForKeywords("test", ['test', 'hello'])
-	SearchSubmisson('242i2k', ['hello'])
-
-	# Save newly processed comments
-	SaveListToFile(processedComments, "ProcessedComments.inf")
+	try:
+		#SearchSubredditTitlesForKeywords("test", ['test', 'hello'])
+		SearchSubmisson('242i2k', ['hello'])
+	finally:
+		# Save newly processed comments
+		SaveListToFile(processedComments, "ProcessedComments.inf")
 
 
 
@@ -126,7 +126,10 @@ def IsYouTubeLink(link):
 ### Load a list from file
 def LoadListFromFile(FileName):
 	L= []
-	L = pickle.load(open(FileName, "rb"))
+	try:
+		L = pickle.load(open(FileName, "rb"))
+	except EOFError:
+		L = []
 	return L
 
 ### Save a list to file
